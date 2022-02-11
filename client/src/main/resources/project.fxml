@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<VBox fx:id="rootNode" alignment="CENTER" prefHeight="400.0" prefWidth="500.0" style="-fx-background-image: url(background.jpg);"
+      xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.172-ea" fx:controller="MainController">
+
+   <VBox fx:id="authPanel" alignment="center" >
+      <Label fx:id="authLabel" alignment="CENTER" maxWidth="Infinity" minHeight="36" prefHeight="36"
+             text="Введите логин и пароль" HBox.hgrow="ALWAYS">
+         <font>
+            <Font name="Arial Bold" size="16.0"/>
+         </font>
+      </Label>
+      <VBox.margin>
+         <Insets bottom="15.0" />
+      </VBox.margin>
+
+      <TextField HBox.hgrow="ALWAYS" maxWidth="200" promptText="Логин" fx:id="loginField">
+         <VBox.margin>
+            <Insets bottom="15.0" />
+         </VBox.margin></TextField>
+      <PasswordField promptText="Пароль" fx:id="passwordField"  maxWidth="200" onAction="#tryToAuth"/>
+      <Button onAction="#tryToAuth" text="Войти" prefWidth="200">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets top="15.0" />
+         </VBox.margin>
+      </Button>
+   </VBox>
+
+   <HBox alignment="CENTER" fx:id="cloudPanel" managed="false" visible="false">
+      <VBox fx:id="clientSide">
+         <Label alignment="CENTER" maxWidth="Infinity" minHeight="36" prefHeight="36"
+                text="Файлы клиента" HBox.hgrow="ALWAYS">
+         </Label>
+
+         <ListView fx:id="clientFileList" VBox.vgrow="ALWAYS" />
+         <HBox>
+            <Button onAction="#pressOnSendToCloudButton" text="Отправить в облако" />
+            <Button fx:id="deleteFromClient" onAction="#pressOnDeleteButton" text="Удалить" />
+         </HBox>
+
+      </VBox>
+
+      <VBox fx:id="serverSide">
+         <Label alignment="CENTER" maxWidth="Infinity" minHeight="36" prefHeight="36"
+                text="Файлы в облаке" HBox.hgrow="ALWAYS">
+         </Label>
+
+         <ListView fx:id="serverFileList" VBox.vgrow="ALWAYS" />
+         <HBox>
+            <Button onAction="#pressOnDownloadButton" text="Скачать" />
+            <Button fx:id="deleteFromServer" onAction="#pressOnDeleteButton" text="Удалить" />
+         </HBox>
+      </VBox>
+
+   </HBox>
+</VBox>
