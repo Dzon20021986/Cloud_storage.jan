@@ -1,0 +1,41 @@
+package com.geekbrains.cloud.jan.server;
+
+import com.geekbrains.cloud.jan.common.AuthMessage;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
+
+public class AuthHandler extends ChannelInboundHandlerAdapter {  // обработчик авторизации
+    private boolean authOk = false;
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object message) throws Exception {  // чтение канала
+
+        try {
+            if (authOk) {
+                ctx.fireChannelRead(message);
+                return;
+            }
+            System.out.println(message.getClass());
+            if (message instanceof AuthMessage) {
+                AuthMessage authMessage = (AuthMessage) message;
+                String userId = DataBaseService.getIdByLoginAndPass(authMessage.login, authMessage.password);
+                if (userId != null) {
+                    authOk = true;
+                    ctx.pipeline().addLast(new ServerMainHandler(userId));
+                    ctx.writeAndFlush(new AuthMessage("/authOk"));
+                } else {
+                    ctx.writeAndFlush(new AuthMessage("/null_userId"));
+                }
+            }
+        } finally {
+            ReferenceCountUtil.release(message);
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){  // пойманное исключение
+        cause.printStackTrace();
+        ctx.close();
+    }
+}
